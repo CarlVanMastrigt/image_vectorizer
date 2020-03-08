@@ -22,8 +22,6 @@ along with image_vectorizer.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "cvm_shared.h"
 
-//typedef enum { false=0, true=1 } bool;
-
 typedef struct config_data
 {
     bool running;

@@ -1,0 +1,3 @@
+[submodule "cvm_shared"]
+	path = cvm_shared
+	url = https://github.com/CarlVanMastrigt/cvm_shared
