@@ -1,0 +1,6 @@
+ValgrindOut.xml
+bin/
+image_vectorizer.depend
+image_vectorizer.layout
+obj/
+gmon.out
