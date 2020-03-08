@@ -13,6 +13,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="cvm_shared" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -44,6 +45,109 @@
 		<Unit filename="LICENSE" />
 		<Unit filename="README.md" />
 		<Unit filename="TODO" />
+		<Unit filename="cvm_shared/cvm_camera.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_camera.h" />
+		<Unit filename="cvm_shared/cvm_gl_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_gl_functions.h" />
+		<Unit filename="cvm_shared/cvm_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_list.h" />
+		<Unit filename="cvm_shared/cvm_managed_buffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_managed_buffer.h" />
+		<Unit filename="cvm_shared/cvm_math.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_math.h" />
+		<Unit filename="cvm_shared/cvm_mesh.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_mesh.h" />
+		<Unit filename="cvm_shared/cvm_overlay.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_overlay.h" />
+		<Unit filename="cvm_shared/cvm_random.h" />
+		<Unit filename="cvm_shared/cvm_shader.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_shader.h" />
+		<Unit filename="cvm_shared/cvm_shared.h" />
+		<Unit filename="cvm_shared/cvm_view.h" />
+		<Unit filename="cvm_shared/cvm_widget.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_widget.h" />
+		<Unit filename="cvm_shared/themes/cubic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/themes/cubic.h" />
+		<Unit filename="cvm_shared/widgets/anchor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/anchor.h" />
+		<Unit filename="cvm_shared/widgets/box.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/box.h" />
+		<Unit filename="cvm_shared/widgets/button.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/button.h" />
+		<Unit filename="cvm_shared/widgets/container.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/container.h" />
+		<Unit filename="cvm_shared/widgets/contiguous_box.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/contiguous_box.h" />
+		<Unit filename="cvm_shared/widgets/enterbox.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/enterbox.h" />
+		<Unit filename="cvm_shared/widgets/file_search.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/file_search.h" />
+		<Unit filename="cvm_shared/widgets/misc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/misc.h" />
+		<Unit filename="cvm_shared/widgets/panel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/panel.h" />
+		<Unit filename="cvm_shared/widgets/popup.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/popup.h" />
+		<Unit filename="cvm_shared/widgets/resize_constraint.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/resize_constraint.h" />
+		<Unit filename="cvm_shared/widgets/sliderbar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/sliderbar.h" />
+		<Unit filename="cvm_shared/widgets/tab.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/tab.h" />
+		<Unit filename="cvm_shared/widgets/text_bar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/text_bar.h" />
+		<Unit filename="cvm_shared/widgets/textbox.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/widgets/textbox.h" />
 		<Unit filename="framebuffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
