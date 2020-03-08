@@ -41,6 +41,9 @@
 			<Add library="GL" />
 			<Add library="libatomic" />
 		</Linker>
+		<Unit filename="LICENSE" />
+		<Unit filename="README.md" />
+		<Unit filename="TODO" />
 		<Unit filename="framebuffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
