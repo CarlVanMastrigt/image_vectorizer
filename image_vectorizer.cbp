@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="image_vectorizer" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/image_vectorizer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/image_vectorizer" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-pg" />
+			<Add directory="../image_vectorizer" />
+		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+			<Add library="SDL2" />
+			<Add library="SDL2_ttf" />
+			<Add library="SDL2_image" />
+			<Add library="GL" />
+			<Add library="libatomic" />
+		</Linker>
+		<Unit filename="framebuffer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="framebuffer.h" />
+		<Unit filename="headers.h" />
+		<Unit filename="input.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="input.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="render.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="render.h" />
+		<Unit filename="shaders/bezier_face_frag.glsl" />
+		<Unit filename="shaders/bezier_face_vert.glsl" />
+		<Unit filename="shaders/bezier_frag.glsl" />
+		<Unit filename="shaders/bezier_vert.glsl" />
+		<Unit filename="shaders/image_display_frag.glsl" />
+		<Unit filename="shaders/image_display_vert.glsl" />
+		<Unit filename="shaders/line_face_frag.glsl" />
+		<Unit filename="shaders/line_face_vert.glsl" />
+		<Unit filename="shaders/line_frag.glsl" />
+		<Unit filename="shaders/line_vert.glsl" />
+		<Unit filename="shaders/overlay_frag.glsl" />
+		<Unit filename="shaders/overlay_vert.glsl" />
+		<Unit filename="shaders/point_frag.glsl" />
+		<Unit filename="shaders/point_vert.glsl" />
+		<Unit filename="shaders/supersampling_frag.glsl" />
+		<Unit filename="vectorizer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizer.h" />
+		<Unit filename="vectorizing/bezier.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/bezier.h" />
+		<Unit filename="vectorizing/cluster_pixels.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/cluster_pixels.h" />
+		<Unit filename="vectorizing/correct_geometry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/correct_geometry.h" />
+		<Unit filename="vectorizing/export.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/export.h" />
+		<Unit filename="vectorizing/generate_geometry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/generate_geometry.h" />
+		<Unit filename="vectorizing/image_processing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/image_processing.h" />
+		<Unit filename="vectorizing/shapes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/shapes.h" />
+		<Unit filename="vectorizing/smoothing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="vectorizing/smoothing.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
