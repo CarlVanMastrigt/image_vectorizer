@@ -43,7 +43,7 @@
 			<Add library="libatomic" />
 		</Linker>
 		<Unit filename="LICENSE" />
-		<Unit filename="README.md" />
+		<Unit filename="README" />
 		<Unit filename="TODO" />
 		<Unit filename="cvm_shared/cvm_camera.c">
 			<Option compilerVar="CC" />
