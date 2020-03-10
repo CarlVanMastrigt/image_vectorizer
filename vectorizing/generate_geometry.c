@@ -124,17 +124,9 @@ static bool generate_line_from_faces(vectorizer_data * vd,face ** pixel_faces,po
     }
 }
 
-
-static void set_all_link_faces(vectorizer_data * vd)
-{
-    point *current_point,*current_node;
-    node_connection * current_connection;
-    face *f_face,*b_face;
-}
-
 void generate_geometry_from_cluster_indices(vectorizer_data * vd)
 {
-    uint32_t i,j;
+    uint32_t i;
     int32_t w,h;
     face *f1,*f2,*outermost_face;
     vec2i p;
