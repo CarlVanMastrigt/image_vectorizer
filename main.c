@@ -474,8 +474,7 @@ int vectorizer_interface(void)
 
 int main()
 {
-    ///return vectorizer_interface();
-    test_coherent_data_structures();
+    return vectorizer_interface();
 
     //printf("%d\n",sizeof(char*));
 }
