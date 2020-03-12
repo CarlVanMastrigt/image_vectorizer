@@ -470,11 +470,7 @@ int vectorizer_interface(void)
     return 0;
 }
 
-
-
 int main()
 {
     return vectorizer_interface();
-
-    //printf("%d\n",sizeof(char*));
 }

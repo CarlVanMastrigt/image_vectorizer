@@ -49,14 +49,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cvm_shared/cvm_camera.h" />
+		<Unit filename="cvm_shared/cvm_data_structures.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cvm_shared/cvm_data_structures.h" />
 		<Unit filename="cvm_shared/cvm_gl_functions.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cvm_shared/cvm_gl_functions.h" />
-		<Unit filename="cvm_shared/cvm_list.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="cvm_shared/cvm_list.h" />
 		<Unit filename="cvm_shared/cvm_managed_buffer.c">
 			<Option compilerVar="CC" />
 		</Unit>
