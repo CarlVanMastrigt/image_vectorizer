@@ -211,6 +211,7 @@ struct vectorizer_data
     vectorizer_render_mode max_render_mode;
     bool render_lines;
     bool can_render_lines;
+    bool lines_require_upload;
     bool render_curves;
     bool can_render_curves;
 
@@ -254,18 +255,10 @@ struct vectorizer_data
     node_connection * available_node_connection;
 
     point ** blocks;///LL of points on a given pixel
-
-    GLuint line_display_array;
-    uint32_t display_line_count;
-
-    GLuint point_display_array;
-    uint32_t display_point_count;
-
-    GLuint face_line_display_array;
 };
 
 
-vectorizer_data * create_vectorizer_data(void);
+vectorizer_data * create_vectorizer_data(gl_functions * glf);
 void delete_vectorizer_data(vectorizer_data * vd);
 
 

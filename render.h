@@ -25,11 +25,10 @@ along with image_vectorizer.  If not, see <https://www.gnu.org/licenses/>.
 #define RENDER_H
 
 
-void render_screen(config_data * cd,vectorizer_data * vd);
+void render_screen(gl_functions * glf,config_data * cd,vectorizer_data * vd);
+void initialise_misc_render_gl_variables(gl_functions * glf);
 
-void initialise_misc_render_gl_variables(void);
-
-void screen_quad(void);
+//void upload_vector_line_render_data(gl_functions * glf,vectorizer_data * vd);
 
 
 #endif

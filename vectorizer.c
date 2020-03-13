@@ -29,7 +29,7 @@ static uint32_t test_bezier_count=0;
 static uint32_t test_colour_count=0;
 static uint32_t test_adjacent_count=0;
 
-vectorizer_data * create_vectorizer_data(void)
+vectorizer_data * create_vectorizer_data(gl_functions * glf)
 {
     initialise_geometry_correction_matrices();///has to be called before use, appropriate to call as part of general data initialisation (this func)
 
@@ -64,16 +64,16 @@ vectorizer_data * create_vectorizer_data(void)
     vd->can_render_curves=false;
 
 
-    glGenTextures(10,vd->images);
+    glf->glGenTextures(10,vd->images);
 
     for(i=0;i<10;i++)
     {
-        glBindTexture(GL_TEXTURE_2D,vd->images[i]);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glBindTexture(GL_TEXTURE_2D,0);
+        glf->glBindTexture(GL_TEXTURE_2D,vd->images[i]);
+        glf->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glf->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glf->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glf->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glf->glBindTexture(GL_TEXTURE_2D,0);
     }
 
     vd->h=0;
@@ -110,17 +110,8 @@ vectorizer_data * create_vectorizer_data(void)
     vd->available_face=NULL;
     vd->first_face=NULL;
 
-    vd->display_line_count=0;
-    vd->line_display_array=0;
-    glGenBuffers_ptr(1, &vd->line_display_array);
-
-
-    vd->display_point_count=0;
-    vd->point_display_array=0;
-    glGenBuffers_ptr(1, &vd->point_display_array);
-
-    vd->face_line_display_array=0;
-    glGenBuffers_ptr(1, &vd->face_line_display_array);
+//    vd->face_line_display_array=0;
+//    glf->glGenBuffers(1, &vd->face_line_display_array);
 
     return vd;
 }
@@ -1096,130 +1087,14 @@ void reset_vectorizer_display_variables(vectorizer_data * vd)
     vd->can_render_lines=false;
 }
 
-static void upload_vector_line_render_data(vectorizer_data * vd)
-{
-    point *current_node,*current,*prev;
-    node_connection * current_connection;
-
-    float wf=1.0/((float)vd->w);
-    float hf=1.0/((float)vd->h);
-
-    uint32_t point_space=2;
-    GLfloat * display_point_buffer=malloc(sizeof(GLfloat)*2*point_space);
-
-    uint32_t line_space=2;
-    GLfloat * display_line_buffer=malloc(sizeof(GLfloat)*4*line_space);
-
-    vd->display_line_count=0;
-    vd->display_point_count=0;
-
-    for(current_node=vd->first_node;current_node;current_node=current_node->n.next)
-    {
-        if(vd->display_point_count==point_space)display_point_buffer=realloc(display_point_buffer,sizeof(GLfloat)*2*(point_space*=2));
-
-        display_point_buffer[vd->display_point_count*2+0]=current_node->b.position.x*wf;
-        display_point_buffer[vd->display_point_count*2+1]=current_node->b.position.y*hf;
-        vd->display_point_count++;
-
-        for(current_connection=current_node->n.first_connection;current_connection;current_connection=current_connection->next) if(current_connection->traversal_direction)
-        {
-            prev=current_node;
-            current=current_connection->point_index;
-
-            do
-            {
-                if(vd->display_line_count==line_space)display_line_buffer=realloc(display_line_buffer,sizeof(GLfloat)*4*(line_space*=2));
-
-                display_line_buffer[vd->display_line_count*4+0]=prev->b.position.x*wf;
-                display_line_buffer[vd->display_line_count*4+1]=prev->b.position.y*hf;
-
-                display_line_buffer[vd->display_line_count*4+2]=current->b.position.x*wf;
-                display_line_buffer[vd->display_line_count*4+3]=current->b.position.y*hf;
-
-                vd->display_line_count++;
-
-                prev=current;
-                current=current->l.next;
-            }
-            while(prev->b.is_link_point);
-        }
-    }
-
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, vd->line_display_array);
-    glBufferData_ptr(GL_ARRAY_BUFFER, sizeof(GLfloat)*4*vd->display_line_count,display_line_buffer, GL_STATIC_DRAW);
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, 0);
-
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, vd->point_display_array);
-    glBufferData_ptr(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*vd->display_point_count,display_point_buffer, GL_STATIC_DRAW);
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, 0);
-
-    free(display_line_buffer);
-    free(display_point_buffer);
-}
-
-static void upload_vector_face_render_data(vectorizer_data * vd)
-{
-    node_connection *current_connection,*start_connection;
-    point *current,*prev;
-    face *current_face;
-
-    int32_t count;
 
 
-    float wf=1.0/((float)vd->w);
-    float hf=1.0/((float)vd->h);
-
-    uint32_t display_face_buffer_size=65536;
-    GLfloat * display_face_buffer=malloc(sizeof(GLfloat)*2*display_face_buffer_size);///  2 floats per point, points used up to MAX_POINT_NODE_CONNECTIONS times (???) and lines used twice (face each side of line)
-
-    count=0;
-
-    for(current_face=vd->first_face;current_face;current_face=current_face->next)
-    {
-        current_face->line_render_offset=count;
-
-        current_connection=start_connection=get_face_start_connection(current_face);
-        current=start_connection->parent_node;
-
-        do
-        {
-            if(display_face_buffer_size==count)display_face_buffer=realloc(display_face_buffer,sizeof(GLfloat)*2*(display_face_buffer_size*=2));
-
-            display_face_buffer[count*2+0]=current->b.position.x*wf;
-            display_face_buffer[count*2+1]=current->b.position.y*hf;
-            count++;
-
-            prev=current;
-            current=current_connection->point_index;
-
-            while(current->b.is_link_point)
-            {
-                if(display_face_buffer_size==count)display_face_buffer=realloc(display_face_buffer,sizeof(GLfloat)*2*(display_face_buffer_size*=2));
-
-                display_face_buffer[count*2+0]=current->b.position.x*wf;
-                display_face_buffer[count*2+1]=current->b.position.y*hf;
-                count++;
-
-                prev=current;
-
-                if(current_connection->traversal_direction) current=current->l.next;
-                else current=current->l.prev;
-            }
-
-            current_connection=get_next_ccw_connection(current,prev);
-        }
-        while(current_connection!=start_connection);
-
-        current_face->line_render_count = count - current_face->line_render_offset;
-    }
 
 
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, vd->face_line_display_array);
-    glBufferData_ptr(GL_ARRAY_BUFFER, sizeof(GLfloat)*2*count,display_face_buffer, GL_STATIC_DRAW);
-    glBindBuffer_ptr(GL_ARRAY_BUFFER, 0);
 
-    free(display_face_buffer);
-}
+
+
+
 
 
 void perform_requested_vectorizer_steps(vectorizer_data * vd,vectorizer_stage intended_stage)
@@ -1239,6 +1114,7 @@ void perform_requested_vectorizer_steps(vectorizer_data * vd,vectorizer_stage in
         case VECTORIZER_STAGE_IMAGE_PROCESSING:
         process_image(vd);
         cluster_pixels(vd);
+        vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_CLUSTERISED;
         if(intended_stage==VECTORIZER_STAGE_IMAGE_PROCESSING)break;
 
 
@@ -1246,11 +1122,14 @@ void perform_requested_vectorizer_steps(vectorizer_data * vd,vectorizer_stage in
         generate_geometry_from_cluster_indices(vd);
         geometry_correction(vd);
         try_to_trace_all_faces(vd);
+        vd->lines_require_upload=true;
+        vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_LINES;
         if(intended_stage==VECTORIZER_STAGE_GENERATE_GEOMETRY)break;
 
 
         case VECTORIZER_STAGE_CONVERT_TO_BEZIER:
         convert_image_to_bezier_curves(vd);
+        vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_CURVES;///bezier faces
         if(intended_stage==VECTORIZER_STAGE_CONVERT_TO_BEZIER)break;
 
 
@@ -1258,38 +1137,21 @@ void perform_requested_vectorizer_steps(vectorizer_data * vd,vectorizer_stage in
         puts("ERROR UNHANDLED VECTORIZER STAGE");
     }
 
-    ///vd->render_mode=vd->max_render_mode
 
-    if(intended_stage>=VECTORIZER_STAGE_IMAGE_PROCESSING)   vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_CLUSTERISED;///processed images
     if(intended_stage>=VECTORIZER_STAGE_GENERATE_GEOMETRY)
     {
         vd->can_render_lines=true;///VECTORIZER_STAGE_GENERATE_GEOMETRY
-        vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_LINES;
+        vd->render_lines_checkbox_widget->base.status|= WIDGET_ACTIVE;
     }
     if(intended_stage>=VECTORIZER_STAGE_CONVERT_TO_BEZIER)
     {
         vd->can_render_curves=true;
-        vd->render_mode=vd->max_render_mode=VECTORIZER_RENDER_MODE_CURVES;///bezier faces
+        vd->render_curves_checkbox_widget->base.status|= WIDGET_ACTIVE;
     }
 
     for(i=1;i<=vd->max_render_mode;i++)vd->render_mode_buttons[i]->base.status|= WIDGET_ACTIVE;
 
     for(i=1;i<=vd->max_render_mode;i++)puts(vd->render_mode_buttons[i]->button.text);
-
-
-    if(vd->can_render_lines)
-    {
-        upload_vector_line_render_data(vd);
-        vd->render_lines_checkbox_widget->base.status|= WIDGET_ACTIVE;
-    }
-    if(vd->max_render_mode>=VECTORIZER_RENDER_MODE_LINES)
-    {
-        upload_vector_face_render_data(vd);
-    }
-    if(vd->can_render_curves)
-    {
-        vd->render_curves_checkbox_widget->base.status|= WIDGET_ACTIVE;
-    }
 
     vd->current_stage=intended_stage;
     vd->variant_stage=intended_stage+1;

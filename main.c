@@ -350,6 +350,7 @@ int vectorizer_interface(void)
     overlay_data o_data;
     overlay_theme cubic_theme;
     vectorizer_data * vd;
+    gl_functions * glf;
 
     widget * menu_widget;
     shared_file_search_data * sfsd;
@@ -364,22 +365,32 @@ int vectorizer_interface(void)
 
     SDL_GL_LoadLibrary(NULL);
 
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,SDL_GL_CONTEXT_PROFILE_CORE);
+
     uint32_t window_flags=SDL_WINDOW_OPENGL;
     if(cd.fullscreen)window_flags|=SDL_WINDOW_FULLSCREEN;
     else window_flags|=SDL_WINDOW_RESIZABLE;
     SDL_Window * window = SDL_CreateWindow("Image Vectorizer",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,cd.screen_width,cd.screen_height,window_flags);
+
+
+
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+
+    glf=get_gl_functions();
 
     load_contextual_resources();
 
-    printf("video driver version: %s\n\n",glGetString(GL_VERSION));
+
+    printf("video driver version: %s\n\n",glf->glGetString(GL_VERSION));
 
 
     TTF_Init();
     IMG_Init(0);
 
 
-    vd=create_vectorizer_data();
+    vd=create_vectorizer_data(glf);
 
     cubic_theme=create_overlay_theme(512,512);///have 2/3 base fonts as input to this function
     #warning make above create_overlay_theme
@@ -392,7 +403,7 @@ int vectorizer_interface(void)
 
     initialise_cubic_theme(&cubic_theme);
 
-    initialise_overlay();
+    initialise_overlay(glf);
 
     set_current_overlay_theme(&cubic_theme);
 
@@ -408,7 +419,7 @@ int vectorizer_interface(void)
 
 
 
-    initialise_misc_render_gl_variables();
+    initialise_misc_render_gl_variables(glf);
 
     initialise_framebuffer_set(&cd);
 
@@ -441,10 +452,10 @@ int vectorizer_interface(void)
         update_theme_textures_on_videocard(&cubic_theme);
         #warning get access to current theme in better way (possibly through static or pointer to active)
 
-        render_screen(&cd,vd);
+        render_screen(glf,&cd,vd);
 
         render_widget_overlay(&o_data,menu_widget);///prerender step
-        render_overlay(&o_data,&cubic_theme,cd.screen_width,cd.screen_height,overlay_colours);///actual render step
+        render_overlay(glf,&o_data,&cubic_theme,cd.screen_width,cd.screen_height,overlay_colours);///actual render step
 
         SDL_GL_SwapWindow(window);
     }
@@ -457,6 +468,8 @@ int vectorizer_interface(void)
     delete_vectorizer_data(vd);
 
     delete_config_data(&cd);
+
+    free_gl_functions(glf);
 
     SDL_GL_DeleteContext(gl_context);
 
