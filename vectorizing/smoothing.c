@@ -191,7 +191,7 @@ void find_smoothest_node_connections(point * node,node_connection ** best_nc1,no
 
 void set_connections_smoothable_status(vectorizer_data * vd)
 {
-    point *current_node,*current_point;
+    point *current_node;
     node_connection *nc1,*nc2,*current_connection;
 
 
@@ -229,7 +229,7 @@ void relocate_loop_nodes_to_flattest_spot(vectorizer_data * vd)
     uint32_t loop_length,variance_space;
     variance_space=2;
     float * variances=malloc(sizeof(vec2f)*variance_space);
-    point *current_node,*next_node,*current_point,*end_point;
+    point *current_node,*next_node,*current_point;
     vec2f prev_pos,current_pos,next_pos;
 
     for(current_node=vd->first_node;current_node;current_node=next_node)

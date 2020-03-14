@@ -24,10 +24,9 @@ along with image_vectorizer.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-void initialise_framebuffer_set(config_data * cd);
+void initialise_framebuffer_set(gl_functions * glf,config_data * cd);
 
-GLuint get_colour_texture(void);
-
-void bind_colour_framebuffer(void);
+void bind_colour_texture(gl_functions * glf,GLenum binding_point);
+void bind_colour_framebuffer(gl_functions * glf);
 
 #endif

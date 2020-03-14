@@ -366,7 +366,7 @@ int vectorizer_interface(void)
     SDL_GL_LoadLibrary(NULL);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,0);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,SDL_GL_CONTEXT_PROFILE_CORE);
 
     uint32_t window_flags=SDL_WINDOW_OPENGL;
@@ -380,7 +380,6 @@ int vectorizer_interface(void)
 
     glf=get_gl_functions();
 
-    load_contextual_resources();
 
 
     printf("video driver version: %s\n\n",glf->glGetString(GL_VERSION));
@@ -421,7 +420,7 @@ int vectorizer_interface(void)
 
     initialise_misc_render_gl_variables(glf);
 
-    initialise_framebuffer_set(&cd);
+    initialise_framebuffer_set(glf,&cd);
 
 
     int mx,my;

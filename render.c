@@ -288,10 +288,9 @@ static void supersample_screen(gl_functions * glf,config_data * cd)
 {
     glf->glUseProgram(shader_supersampling);
 
-    glf->glActiveTexture(GL_TEXTURE0);
-    glf->glBindTexture(GL_TEXTURE_2D,get_colour_texture());
+    bind_colour_texture(glf,GL_TEXTURE0);
 
-    glf->glUniform1i(glGetUniformLocation_ptr(shader_supersampling,"supersample_magnitude"),cd->supersample_magnitude);
+    glf->glUniform1i(glf->glGetUniformLocation(shader_supersampling,"supersample_magnitude"),cd->supersample_magnitude);
 
     screen_quad(glf);
 
@@ -305,7 +304,7 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
     bezier * current_bezier;
     node_connection * current_connection;
 
-    bind_colour_framebuffer();
+    bind_colour_framebuffer(glf);
 
     float x=(((float)vd->w))/((float)(cd->screen_width*cd->supersample_magnitude))*cd->zoom;
     float y=(((float)vd->h))/((float)(cd->screen_height*cd->supersample_magnitude))*cd->zoom;
@@ -326,8 +325,8 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
     if((vd->render_mode>=VECTORIZER_RENDER_MODE_IMAGE)&&(vd->render_mode<=VECTORIZER_RENDER_MODE_CLUSTERISED))
     {
         glf->glBindTexture(GL_TEXTURE_2D,vd->images[vd->render_mode-1]);
-        glf->glUniform4f(glGetUniformLocation_ptr(shader_image_display,"coords"),x,-y,x_off,y_off);
-        glf->glUniform2f(glGetUniformLocation_ptr(shader_image_display,"relative_size"),rw,rh);
+        glf->glUniform4f(glf->glGetUniformLocation(shader_image_display,"coords"),x,-y,x_off,y_off);
+        glf->glUniform2f(glf->glGetUniformLocation(shader_image_display,"relative_size"),rw,rh);
         screen_quad(glf);
     }
 
@@ -339,7 +338,7 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
     if((vd->can_render_lines)&&(vd->render_lines))
     {
         glf->glUseProgram(shader_line);
-        glf->glUniform3f(glGetUniformLocation_ptr(shader_line,"c"),0,1,0);
+        glf->glUniform3f(glf->glGetUniformLocation(shader_line,"c"),0,1,0);
 
         glf->glLineWidth((float)cd->supersample_magnitude);
 
@@ -367,7 +366,7 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
         glf->glUseProgram(shader_bezier);
         glf->glBindVertexArray(empty_vao);
 
-        glf->glUniform4f(glGetUniformLocation_ptr(shader_bezier,"coords"),x,-y,x_off,y_off);
+        glf->glUniform4f(glf->glGetUniformLocation(shader_bezier,"coords"),x,-y,x_off,y_off);
 
         inv_w=1.0/((float)(vd->w));
         inv_h=1.0/((float)(vd->h));
@@ -394,9 +393,9 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
                         bezier_data[6]=current_bezier->p2.x*inv_w;
                         bezier_data[7]=current_bezier->p2.y*inv_h;
 
-                        glf->glUniform2fv(glGetUniformLocation_ptr(shader_bezier,"data"),4,bezier_data);
+                        glf->glUniform2fv(glf->glGetUniformLocation(shader_bezier,"data"),4,bezier_data);
 
-                        glf->glUniform1f(glGetUniformLocation_ptr(shader_bezier,"inverse_vertex_count"),1.0/((float)(current_bezier->num_sections*4)));
+                        glf->glUniform1f(glf->glGetUniformLocation(shader_bezier,"inverse_vertex_count"),1.0/((float)(current_bezier->num_sections*4)));
 
                         glf->glDrawArrays(GL_LINE_STRIP,0,current_bezier->num_sections*4+1);
                     }
@@ -412,7 +411,7 @@ static void render_overlap(gl_functions * glf,config_data * cd,vectorizer_data *
 
 static void render_line_faces(gl_functions * glf,config_data * cd,vectorizer_data * vd)
 {
-    bind_colour_framebuffer();
+    bind_colour_framebuffer(glf);
 
     shape *current_shape,*prev_shape;
     face * current_face;
@@ -424,17 +423,17 @@ static void render_line_faces(gl_functions * glf,config_data * cd,vectorizer_dat
     float y_off=(-2.0*cd->y*cd->zoom)/((float)(cd->screen_height*cd->supersample_magnitude));
 
 
-    glUseProgram_ptr(shader_line_face);///render black box as starting background
-    glUniform4f_ptr(glGetUniformLocation_ptr(shader_line_face,"coords"),x,-y,x_off,y_off);
-    glUniform3f_ptr(glGetUniformLocation_ptr(shader_line_face,"c"),0.0,0.0,0.0);
+    glf->glUseProgram(shader_line_face);///render black box as starting background
+    glf->glUniform4f(glf->glGetUniformLocation(shader_line_face,"coords"),x,-y,x_off,y_off);
+    glf->glUniform3f(glf->glGetUniformLocation(shader_line_face,"c"),0.0,0.0,0.0);
     unit_quad(glf);
 
     float r,g,b;
 
-    GLint colour_uniform_loc=glGetUniformLocation_ptr(shader_line_face,"c");
+    GLint colour_uniform_loc=glf->glGetUniformLocation(shader_line_face,"c");
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
+    glf->glEnable(GL_BLEND);
+    glf->glBlendFunc(GL_ONE, GL_ONE);
 
     current_shape=vd->first_shape;
     prev_shape=NULL;
@@ -456,9 +455,9 @@ static void render_line_faces(gl_functions * glf,config_data * cd,vectorizer_dat
                 }
                 else convert_cielab_to_rgb_float(current_face->colour,&r,&g,&b);
 
-                glUniform3f_ptr(colour_uniform_loc,r,g,b);
+                glf->glUniform3f(colour_uniform_loc,r,g,b);
 
-                glDrawArrays(GL_TRIANGLE_FAN,current_face->line_render_offset,current_face->line_render_count);
+                glf->glDrawArrays(GL_TRIANGLE_FAN,current_face->line_render_offset,current_face->line_render_count);
             }
 
             if(current_shape->first_child)
@@ -476,14 +475,14 @@ static void render_line_faces(gl_functions * glf,config_data * cd,vectorizer_dat
 
     glf->glBindVertexArray(0);
 
-    glDisable(GL_BLEND);
+    glf->glDisable(GL_BLEND);
 
-    glUseProgram_ptr(0);
+    glf->glUseProgram(0);
 }
 
 static void render_bezier_faces(gl_functions * glf,config_data * cd,vectorizer_data * vd)
 {
-    bind_colour_framebuffer();
+    bind_colour_framebuffer(glf);
 
     point *current,*prev;
     shape *current_shape,*prev_shape;
@@ -503,24 +502,24 @@ static void render_bezier_faces(gl_functions * glf,config_data * cd,vectorizer_d
     float inv_h=1.0/((float)(vd->h));
 
 
-    glUseProgram_ptr(shader_line_face);///render black box as starting background
-    glUniform4f_ptr(glGetUniformLocation_ptr(shader_line_face,"coords"),x,-y,x_off,y_off);
-    glUniform3f_ptr(glGetUniformLocation_ptr(shader_line_face,"c"),0.0,0.0,0.0);
+    glf->glUseProgram(shader_line_face);///render black box as starting background
+    glf->glUniform4f(glf->glGetUniformLocation(shader_line_face,"coords"),x,-y,x_off,y_off);
+    glf->glUniform3f(glf->glGetUniformLocation(shader_line_face,"c"),0.0,0.0,0.0);
     unit_quad(glf);
 
 
-    glUseProgram_ptr(shader_bezier_face);
+    glf->glUseProgram(shader_bezier_face);
 
-    glUniform4f_ptr(glGetUniformLocation_ptr(shader_bezier_face,"coords"),x,-y,x_off,y_off);
+    glf->glUniform4f(glf->glGetUniformLocation(shader_bezier_face,"coords"),x,-y,x_off,y_off);
 
-    GLint colour_uniform_loc=glGetUniformLocation_ptr(shader_bezier_face,"c");
-    GLint points_uniform_loc=glGetUniformLocation_ptr(shader_bezier_face,"data");
-    GLint inverse_count_uniform_loc=glGetUniformLocation_ptr(shader_bezier_face,"inverse_vertex_count");
+    GLint colour_uniform_loc=glf->glGetUniformLocation(shader_bezier_face,"c");
+    GLint points_uniform_loc=glf->glGetUniformLocation(shader_bezier_face,"data");
+    GLint inverse_count_uniform_loc=glf->glGetUniformLocation(shader_bezier_face,"inverse_vertex_count");
 
     GLfloat control_points[10];
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE);
+    glf->glEnable(GL_BLEND);
+    glf->glBlendFunc(GL_ONE, GL_ONE);
 
     float r,g,b;
 
@@ -543,7 +542,7 @@ static void render_bezier_faces(gl_functions * glf,config_data * cd,vectorizer_d
                 }
                 else convert_cielab_to_rgb_float(current_face->colour,&r,&g,&b);
 
-                glUniform3f_ptr(colour_uniform_loc,r,g,b);
+                glf->glUniform3f(colour_uniform_loc,r,g,b);
 
                 current_connection=start_connection=get_face_start_connection(current_face);
 
@@ -576,11 +575,11 @@ static void render_bezier_faces(gl_functions * glf,config_data * cd,vectorizer_d
                         control_points[traversal_direction*6+1]=current_bezier->p2.y*inv_h;
 
 
-                        glUniform2fv_ptr(points_uniform_loc,5,control_points);
+                        glf->glUniform2fv(points_uniform_loc,5,control_points);
 
-                        glUniform1f_ptr(inverse_count_uniform_loc,1.0/((float)current_bezier->num_sections*4));
+                        glf->glUniform1f(inverse_count_uniform_loc,1.0/((float)current_bezier->num_sections*4));
 
-                        glDrawArrays(GL_TRIANGLE_FAN,0,current_bezier->num_sections*4+2);///+2 istead of +1 b/c 0th element reserved for fan start pos, (extra +1 is for point to segment difference, that is: the end point)
+                        glf->glDrawArrays(GL_TRIANGLE_FAN,0,current_bezier->num_sections*4+2);///+2 istead of +1 b/c 0th element reserved for fan start pos, (extra +1 is for point to segment difference, that is: the end point)
 
                         if(traversal_direction) current_bezier=current_bezier->next;
                         else current_bezier=current_bezier->prev;
@@ -614,20 +613,20 @@ static void render_bezier_faces(gl_functions * glf,config_data * cd,vectorizer_d
     glf->glBindVertexArray(0);
 
 
-    glDisable(GL_BLEND);
+    glf->glDisable(GL_BLEND);
 
 
-    glUseProgram_ptr(0);
+    glf->glUseProgram(0);
 }
 
 void render_screen(gl_functions * glf,config_data * cd,vectorizer_data * vd)
 {
-    glViewport(0,0,cd->screen_width*cd->supersample_magnitude,cd->screen_height*cd->supersample_magnitude);
+    glf->glViewport(0,0,cd->screen_width*cd->supersample_magnitude,cd->screen_height*cd->supersample_magnitude);
 
-    glClearColor(0.05,0.05,0.05,1.0);
+    glf->glClearColor(0.05,0.05,0.05,1.0);
 
-    bind_colour_framebuffer();
-    glClear(GL_COLOR_BUFFER_BIT);
+    bind_colour_framebuffer(glf);
+    glf->glClear(GL_COLOR_BUFFER_BIT);
 
     if(vd->lines_require_upload)upload_line_render_data(glf,vd),vd->lines_require_upload=false;
 
@@ -635,10 +634,10 @@ void render_screen(gl_functions * glf,config_data * cd,vectorizer_data * vd)
     if(vd->render_mode==VECTORIZER_RENDER_MODE_LINES)render_line_faces(glf,cd,vd);
     if(vd->render_mode==VECTORIZER_RENDER_MODE_CURVES)render_bezier_faces(glf,cd,vd);
 
-    glViewport(0,0,cd->screen_width,cd->screen_height);
+    glf->glViewport(0,0,cd->screen_width,cd->screen_height);
 
-    glBindFramebuffer_ptr(GL_FRAMEBUFFER,0);
-    glDrawBuffer(GL_BACK);
+    glf->glBindFramebuffer(GL_FRAMEBUFFER,0);
+    glf->glDrawBuffer(GL_BACK);
 
     supersample_screen(glf,cd);
 

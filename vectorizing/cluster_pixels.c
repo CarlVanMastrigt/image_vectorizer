@@ -24,13 +24,15 @@ typedef struct pixel_sample_data pixel_sample_data;
 typedef struct adjacent_pixel_cluster_tree_node adjacent_pixel_cluster_tree_node;
 typedef struct pixel_cluster pixel_cluster;
 
-/// adjacent offset directions
-///
-///  3 2 1
-///   \|/
-///  4-X-0
-///   /|\
-///  5 6 7
+/**
+    adjacent offset directions
+
+    3 2 1
+     \|/
+    4-X-0
+     /|\
+    5 6 7
+*/
 
 //static const uint32_t directly_adjacent_pixel_samples=4;
 static const uint32_t adjacent_pixel_samples=8;
@@ -835,7 +837,7 @@ static void adjust_clusters(pixel_cluster ** first_cluster,cluster_change ** cha
 {
     uint32_t i,j,change_count,tt,moved_count,cycle_count;
     float f;
-    pixel_cluster *pc,*adj_pc;
+    pixel_cluster *pc;
     pixel_sample_data *psd,*ap,*psd_next,*psd_prev;
     cluster_change cc;
 
@@ -1291,11 +1293,6 @@ void cluster_pixels(vectorizer_data * vd)
     pixel_count=w*h;
 
     int32_t adjacent_offsets[8]={1,-w+1,-w,-w-1,-1,w-1,w,w+1};///counter-clockwise starting at x+1
-    ///  3 2 1
-    ///   \|/
-    ///  4-X-0
-    ///   /|\
-    ///  5 6 7
 
     change_space=1;
 
