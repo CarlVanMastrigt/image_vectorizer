@@ -391,7 +391,7 @@ int vectorizer_interface(void)
 
     vd=create_vectorizer_data(glf);
 
-    cubic_theme=create_overlay_theme(512,512);///have 2/3 base fonts as input to this function
+    cubic_theme=create_overlay_theme(glf,512,512);///have 2/3 base fonts as input to this function
     #warning make above create_overlay_theme
 
     #warning make part of other function (initialise_cubic_theme) and improve functionality
@@ -400,7 +400,7 @@ int vectorizer_interface(void)
 
     initialise_overlay_data(&o_data);
 
-    initialise_cubic_theme(&cubic_theme);
+    initialise_cubic_theme(glf,&cubic_theme);
 
     initialise_overlay(glf);
 
@@ -448,7 +448,7 @@ int vectorizer_interface(void)
         SDL_GetMouseState(&mx,&my);
         find_potential_interaction_widget(menu_widget,mx,my);
 
-        update_theme_textures_on_videocard(&cubic_theme);
+        update_theme_textures_on_videocard(glf,&cubic_theme);
         #warning get access to current theme in better way (possibly through static or pointer to active)
 
         render_screen(glf,&cd,vd);
