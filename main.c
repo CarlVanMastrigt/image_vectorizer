@@ -71,7 +71,7 @@ static config_data initialise_config_data(void)
     cd.window_resized=true;
     cd.screen_height=768;
     cd.screen_width=1366;
-    cd.supersample_magnitude=4;
+    cd.supersample_magnitude=1;
 
 
 
