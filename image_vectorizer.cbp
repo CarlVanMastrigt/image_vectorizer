@@ -84,6 +84,8 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cvm_shared/cvm_widget.h" />
+		<Unit filename="cvm_shared/shaders/overlay_frag.glsl" />
+		<Unit filename="cvm_shared/shaders/overlay_vert.glsl" />
 		<Unit filename="cvm_shared/themes/cubic.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -168,14 +170,13 @@
 		<Unit filename="shaders/bezier_face_vert.glsl" />
 		<Unit filename="shaders/bezier_frag.glsl" />
 		<Unit filename="shaders/bezier_vert.glsl" />
+		<Unit filename="shaders/generic_vert.glsl" />
 		<Unit filename="shaders/image_display_frag.glsl" />
 		<Unit filename="shaders/image_display_vert.glsl" />
 		<Unit filename="shaders/line_face_frag.glsl" />
 		<Unit filename="shaders/line_face_vert.glsl" />
 		<Unit filename="shaders/line_frag.glsl" />
 		<Unit filename="shaders/line_vert.glsl" />
-		<Unit filename="shaders/overlay_frag.glsl" />
-		<Unit filename="shaders/overlay_vert.glsl" />
 		<Unit filename="shaders/point_frag.glsl" />
 		<Unit filename="shaders/point_vert.glsl" />
 		<Unit filename="shaders/supersampling_frag.glsl" />

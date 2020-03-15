@@ -356,7 +356,7 @@ int vectorizer_interface(void)
     shared_file_search_data * sfsd;
 
 
-    set_shader_version_and_defines("#version 130\n\n");
+    set_shader_version_and_defines("#version 420\n\n");
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -365,7 +365,7 @@ int vectorizer_interface(void)
 
     SDL_GL_LoadLibrary(NULL);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,SDL_GL_CONTEXT_PROFILE_CORE);
 

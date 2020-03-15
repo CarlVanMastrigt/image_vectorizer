@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with image_vectorizer.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-in vec2 pos;
+layout (location = 0) in vec2 pos;
 
 uniform vec4 coords;
 

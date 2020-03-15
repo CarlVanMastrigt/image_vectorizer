@@ -133,7 +133,7 @@ void initialise_misc_render_gl_variables(gl_functions * glf)
 
 
 
-    shader_supersampling=initialise_shader_program(glf,NULL,NULL,NULL,"./shaders/supersampling_frag.glsl");
+    shader_supersampling=initialise_shader_program(glf,NULL,"./shaders/generic_vert.glsl",NULL,"./shaders/supersampling_frag.glsl");
     glf->glUseProgram(shader_supersampling);
     glf->glUniform1i(glf->glGetUniformLocation(shader_supersampling,"colour"),0);
     glf->glUseProgram(0);
@@ -275,7 +275,7 @@ static void upload_line_render_data(gl_functions * glf,vectorizer_data * vd)
     glf->glBindBuffer(GL_ARRAY_BUFFER,0);
 
     glf->glBindBuffer(GL_ARRAY_BUFFER,face_line_render_array);
-    glf->glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*2*face_vertex_count,display_face_buffer, GL_STATIC_DRAW);
+    glf->glBufferData(GL_ARRAY_BUFFER,sizeof(GLfloat)*2*face_vertex_count,display_face_buffer,GL_STATIC_DRAW);
     glf->glBindBuffer(GL_ARRAY_BUFFER,0);
 
     free(display_line_buffer);
